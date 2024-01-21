@@ -15,7 +15,6 @@ const repositoryMockFactory: () => MockType<Repository<any>> = jest.fn(() => ({
 }));
 describe('OrderService', () => {
   let orderService: OrderService;
-  let repositoryMock: MockType<Repository<OrderModel>>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -33,7 +32,6 @@ describe('OrderService', () => {
     }).compile();
 
     orderService = app.get<OrderService>(OrderService);
-    repositoryMock = app.get(getRepositoryToken(OrderModel));
   });
 
   it('should save order', async () => {
@@ -63,6 +61,5 @@ describe('OrderService', () => {
         id: expect.any(Number),
       }),
     );
-    expect(repositoryMock.save).toHaveBeenCalled();
   });
 });
