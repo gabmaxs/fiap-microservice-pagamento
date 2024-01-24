@@ -18,33 +18,40 @@ export class PaymentService {
   ) {}
 
   async create(createPaymentDTO: CreatePaymentDTO) {
-    try {
-      const createdOrder = await this.orderService.create({
-        externalId: createPaymentDTO.externalId,
-        total: createPaymentDTO.total,
-        status: createPaymentDTO.status,
-        itens: JSON.stringify(createPaymentDTO.itens),
-      } as CreateOrderDTO);
+    const entityManager = this.paymentModelRepository.manager; // Obter o EntityManager
 
-      const createdPaymentPartner =
-        await this.paymentPartnerAdapter.generateQRCode({
-          externalId: String(createPaymentDTO.externalId),
-          total: createPaymentDTO.total,
-          itens: createPaymentDTO.itens,
+    return entityManager.transaction(async (transactionalEntityManager) => {
+      try {
+        const createdOrder = await this.orderService
+          .setTransaction(transactionalEntityManager)
+          .create({
+            externalId: createPaymentDTO.externalId,
+            total: createPaymentDTO.total,
+            status: createPaymentDTO.status,
+            itens: JSON.stringify(createPaymentDTO.itens),
+          } as CreateOrderDTO);
+
+        const createdPaymentPartner =
+          await this.paymentPartnerAdapter.generateQRCode({
+            externalId: String(createPaymentDTO.externalId),
+            total: createPaymentDTO.total,
+            itens: createPaymentDTO.itens,
+          });
+
+        await transactionalEntityManager.save(PaymentModel, {
+          orderId: createdOrder.id,
+          externalId: createdPaymentPartner.externalId,
+          total: createdOrder.total,
+          status: PAYMENT_STATUS.NOVO,
         });
 
-      await this.paymentModelRepository.save({
-        orderId: createdOrder.id,
-        externalId: createdPaymentPartner.externalId,
-        total: createdOrder.total,
-        status: PAYMENT_STATUS.NOVO,
-      });
-      return {
-        qrCode: createdPaymentPartner.externalId,
-      };
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
+        return {
+          qrCode: createdPaymentPartner.externalId,
+        };
+      } catch (e) {
+        console.error(e);
+        throw e;
+      }
+    });
   }
 }
