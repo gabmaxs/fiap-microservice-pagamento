@@ -31,6 +31,12 @@ jobs:
         MERCADO_PAGO_USER: ${{ secrets.MERCADO_PAGO_USER }}
         MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
         MERCADO_PAGO_EMPRESA_ID: ${{ secrets.MERCADO_PAGO_EMPRESA_ID }}
+
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
