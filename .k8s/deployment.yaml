@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-payment
+  namespace: tech-challenge
+spec:
+  selector:
+    matchLabels:
+      app: ms-payment
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ms-payment
+    spec:
+      containers:
+      - name: ms-payment
+        image: 245067624636.dkr.ecr.ap-east-1.amazonaws.com/ms-payment:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+          - name: MERCADO_PAGO_URL
+            value: https://api.mercadopago.com
+          - name: MERCADO_PAGO_USER
+            value: user
+          - name: MERCADO_PAGO_TOKEN
+            value: token
+          - name: MERCADO_PAGO_EMPRESA_ID
+            value: EMP1
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 80
+          periodSeconds: 15
+          failureThreshold: 3
+          successThreshold: 1
+          initialDelaySeconds: 10
+          timeoutSeconds: 10
