@@ -22,6 +22,7 @@ export class PaymentPartnerAdapter {
     try {
       const userId = process.env.MERCADO_PAGO_USER;
       const empresaId = process.env.MERCADO_PAGO_EMPRESA_ID;
+      const notificationURL = process.env.MERCADO_PAGO_NOTIFICATION;
       const requestURL = `/instore/orders/qr/seller/collectors/${userId}/pos/${empresaId}/qrs`;
       const payload = {
         cash_out: {
@@ -37,7 +38,7 @@ export class PaymentPartnerAdapter {
           total_amount: item.price * item.amount,
         })),
         notification_url:
-          'https://webhook.site/64403458-1ea5-469a-9427-49d1e4b5cc52/notifications',
+          `${notificationURL}/notifications`,
         title: 'Compra em Tech Challenge Store',
         total_amount: createQRCode.total,
       };
