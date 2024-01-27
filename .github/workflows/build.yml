@@ -20,14 +20,14 @@ jobs:
 
     - name: Unit testing
       run: |
-        yarn test:test:cov
+        yarn test:cov
 
     - name: Integration testing
       run: |
         yarn test:e2e
       env:
         NODE_ENV: test
-        MERCADO_PAGO_URL: https://api.mercadopago.com
+        MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
         MERCADO_PAGO_USER: ${{ secrets.MERCADO_PAGO_USER }}
         MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
         MERCADO_PAGO_EMPRESA_ID: ${{ secrets.MERCADO_PAGO_EMPRESA_ID }}
