@@ -24,7 +24,7 @@ jobs:
 
     - name: Integration testing
       run: |
-        yarn test:e2e
+        yarn test:e2e-cov
       env:
         NODE_ENV: test
         MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
