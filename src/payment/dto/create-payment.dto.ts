@@ -5,7 +5,7 @@ class Item {
 }
 
 export class CreatePaymentDTO {
-  externalId: number;
+  externalId: string;
   total: number;
   itens: Item[];
   status: number;

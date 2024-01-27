@@ -23,4 +23,10 @@ export class OrderService {
       this.transaction,
     ) as Promise<CreatedOrderDTO>;
   }
+
+  getByExternalId(externalId: string) {
+    return this.orderModelRepository.findOneBy({
+      externalId,
+    });
+  }
 }

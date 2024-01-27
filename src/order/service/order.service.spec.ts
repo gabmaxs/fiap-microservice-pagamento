@@ -36,7 +36,7 @@ describe('OrderService', () => {
 
   it('should save order', async () => {
     const order: CreateOrderDTO = {
-      externalId: 123,
+      externalId: '123',
       total: 145.95,
       itens: JSON.stringify([
         {

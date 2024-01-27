@@ -6,7 +6,7 @@ export class OrderModel {
   id: number;
 
   @Column()
-  externalId: number;
+  externalId: string;
 
   @Column()
   total: number;

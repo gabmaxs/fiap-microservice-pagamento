@@ -46,12 +46,32 @@ export class PaymentService {
         });
 
         return {
-          qrCode: createdPaymentPartner.externalId,
+          qrCode: createdPaymentPartner.qrCode,
         };
       } catch (e) {
         console.error(e);
         throw e;
       }
     });
+  }
+
+  async handlePaymentNotifications(paymentId: number) {
+    try {
+      const { status, orderExternalId } =
+        await this.paymentPartnerAdapter.getPaymentStatusById(paymentId);
+
+      const order = await this.orderService.getByExternalId(orderExternalId);
+
+      const payment = await this.paymentModelRepository.findOneByOrFail({
+        orderId: order.id,
+      });
+      return await this.paymentModelRepository.save({
+        ...payment,
+        status,
+      });
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 }

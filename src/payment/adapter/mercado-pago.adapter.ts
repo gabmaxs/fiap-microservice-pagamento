@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Axios } from 'axios';
 import { CreateQRCodeDTO, CreatedQRCodeDTO } from '../dto/qr-code.dto';
+import { PAYMENT_STATUS } from '../consts/payment-status.const';
 
 @Injectable()
 export class PaymentPartnerAdapter {
@@ -35,7 +36,8 @@ export class PaymentPartnerAdapter {
           unit_measure: 'unit',
           total_amount: item.price * item.amount,
         })),
-        notification_url: 'https://www.yourserver.com/notifications',
+        notification_url:
+          'https://webhook.site/64403458-1ea5-469a-9427-49d1e4b5cc52/notifications',
         title: 'Compra em Tech Challenge Store',
         total_amount: createQRCode.total,
       };
@@ -56,5 +58,33 @@ export class PaymentPartnerAdapter {
       console.error(e);
       throw e;
     }
+  }
+
+  async getPaymentStatusById(id: number) {
+    try {
+      const requestURL = `/v1/payments/${id}`;
+      const { data } = await this.client.get(requestURL);
+
+      const parsedData = JSON.parse(data);
+
+      const retorno = {
+        status: this.mapStatus(data.status),
+        orderExternalId: parsedData.external_reference,
+      };
+
+      return retorno;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
+  mapStatus(status: string): number {
+    const statusObj = {
+      approved: 'APROVADO',
+      canceled: 'CANCELED',
+    };
+
+    return PAYMENT_STATUS[statusObj[status]];
   }
 }

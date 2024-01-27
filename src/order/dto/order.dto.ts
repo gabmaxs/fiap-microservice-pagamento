@@ -1,5 +1,5 @@
 export class CreateOrderDTO {
-  externalId: number;
+  externalId: string;
   total: number;
   itens: string;
   status: number;
@@ -7,7 +7,7 @@ export class CreateOrderDTO {
 
 export class CreatedOrderDTO {
   id: number;
-  externalId: number;
+  externalId: string;
   total: number;
   itens: string;
   status: number;
