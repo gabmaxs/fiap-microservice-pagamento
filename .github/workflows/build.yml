@@ -22,7 +22,7 @@ jobs:
 
     - name: Unit testing
       run: |
-        yarn test:cov
+        yarn test
 
     - name: Integration testing
       run: |
