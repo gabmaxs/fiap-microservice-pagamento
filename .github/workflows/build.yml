@@ -24,15 +24,15 @@ jobs:
       run: |
         yarn test:cov
 
-    # - name: Integration testing
-    #   run: |
-    #     yarn test:e2e-cov
-    #   env:
-    #     NODE_ENV: test
-    #     MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
-    #     MERCADO_PAGO_USER: ${{ secrets.MERCADO_PAGO_USER }}
-    #     MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
-    #     MERCADO_PAGO_EMPRESA_ID: ${{ secrets.MERCADO_PAGO_EMPRESA_ID }}
+    - name: Integration testing
+      run: |
+        yarn test:e2e-cov
+      env:
+        NODE_ENV: test
+        MERCADO_PAGO_URL: ${{ secrets.MERCADO_PAGO_URL }}
+        MERCADO_PAGO_USER: ${{ secrets.MERCADO_PAGO_USER }}
+        MERCADO_PAGO_TOKEN: ${{ secrets.MERCADO_PAGO_TOKEN }}
+        MERCADO_PAGO_EMPRESA_ID: ${{ secrets.MERCADO_PAGO_EMPRESA_ID }}
 
     - name: List directory contents
       run: ls
@@ -40,7 +40,7 @@ jobs:
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Configure AWS credentials
