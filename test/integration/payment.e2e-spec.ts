@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { PaymentPartnerAdapter } from '../src/payment/adapter/mercado-pago.adapter';
-import { PAYMENT_STATUS } from '../src/payment/consts/payment-status.const';
+import { AppModule } from '../../src/app.module';
+import { PaymentPartnerAdapter } from '../../src/payment/adapter/mercado-pago.adapter';
+import { PAYMENT_STATUS } from '../../src/payment/consts/payment-status.const';
 
 describe('PaymentController (e2e)', () => {
   let app: INestApplication;

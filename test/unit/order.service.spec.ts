@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrderService } from './order.service';
-import { CreateOrderDTO } from '../dto/order.dto';
+import { OrderService } from '../../src/order/service/order.service';
+import { CreateOrderDTO } from '../../src/order/dto/order.dto';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
-import { OrderModel } from '../model/order.model';
+import { OrderModel } from '../../src/order/model/order.model';
 import { Repository } from 'typeorm';
-import { config } from '../../database/database.config';
+import { config } from '../../src/database/database.config';
 
 type MockType<T> = {
   [P in keyof T]?: jest.Mock<object>;
