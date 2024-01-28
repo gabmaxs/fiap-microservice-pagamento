@@ -65,7 +65,7 @@ export class PaymentService {
       const order = await this.orderService.getByExternalId(orderExternalId);
 
       await this.paymentOrderMicroserviceAdapter.confirmPayment({
-        id: order.externalId,
+        id: orderExternalId,
         status: 'recebido'
       });
 
