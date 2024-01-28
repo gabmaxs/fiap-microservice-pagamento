@@ -4,8 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../../src/app.module';
 import { PaymentPartnerAdapter } from '../../src/payment/adapter/mercado-pago.adapter';
 import { PAYMENT_STATUS } from '../../src/payment/consts/payment-status.const';
-import { OrderMicroserviceAdapter } from '../../src/payment/adapter/order-microservice.adapter';
-import { AxiosResponse } from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 
 describe('PaymentController (e2e)', () => {
   let app: INestApplication;
@@ -56,8 +55,8 @@ describe('PaymentController (e2e)', () => {
         status: PAYMENT_STATUS.APROVADO,
         orderExternalId: externaiId,
       }));
-    const spyOrderMS = jest.spyOn(OrderMicroserviceAdapter.prototype, 'confirmPayment')
-      .mockImplementation(async () => ({
+    const spyOrderMS = jest.spyOn(Axios.prototype, 'post')
+      .mockImplementationOnce(async () => ({
         status: 200,
       } as AxiosResponse));
     const idPayment = 123;
@@ -73,9 +72,12 @@ describe('PaymentController (e2e)', () => {
 
     // expect status do pagamento atualizado
     expect(response.body.status).toBe(PAYMENT_STATUS.APROVADO);
-    expect(spyOrderMS).toHaveBeenCalledWith({
-      id: externaiId,
-      status: 'recebido'
-    });
+    expect(spyOrderMS).toHaveBeenCalledWith(
+      '/order-confirm',
+      JSON.stringify({
+        id: externaiId,
+        status: 'recebido'
+      }),
+    );
   });
 });
