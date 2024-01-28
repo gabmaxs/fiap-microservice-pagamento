@@ -7,6 +7,7 @@ import { OrderService } from '../../order/service/order.service';
 import { PaymentPartnerAdapter } from '../adapter/mercado-pago.adapter';
 import { PAYMENT_STATUS } from '../consts/payment-status.const';
 import { CreatePaymentDTO } from '../dto/create-payment.dto';
+import { OrderMicroserviceAdapter } from '../adapter/order-microservice.adapter';
 
 @Injectable()
 export class PaymentService {
@@ -15,6 +16,7 @@ export class PaymentService {
     private paymentModelRepository: Repository<PaymentModel>,
     private orderService: OrderService,
     private paymentPartnerAdapter: PaymentPartnerAdapter,
+    private paymentOrderMicroserviceAdapter: OrderMicroserviceAdapter,
   ) {}
 
   async create(createPaymentDTO: CreatePaymentDTO) {
@@ -61,6 +63,11 @@ export class PaymentService {
         await this.paymentPartnerAdapter.getPaymentStatusById(paymentId);
 
       const order = await this.orderService.getByExternalId(orderExternalId);
+
+      await this.paymentOrderMicroserviceAdapter.confirmPayment({
+        id: order.externalId,
+        status: 'recebido'
+      });
 
       const payment = await this.paymentModelRepository.findOneByOrFail({
         orderId: order.id,
