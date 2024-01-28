@@ -73,6 +73,9 @@ describe('PaymentController (e2e)', () => {
 
     // expect status do pagamento atualizado
     expect(response.body.status).toBe(PAYMENT_STATUS.APROVADO);
-    expect(spyOrderMS).toHaveBeenCalled();
+    expect(spyOrderMS).toHaveBeenCalledWith({
+      id: externaiId,
+      status: 'recebido'
+    });
   });
 });
