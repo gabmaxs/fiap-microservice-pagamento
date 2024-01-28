@@ -49,14 +49,10 @@ export class PaymentPartnerAdapter {
 
       const parsedData = JSON.parse(data);
 
-      console.log(parsedData);
-
       const retorno: CreatedQRCodeDTO = {
         externalId: parsedData.in_store_order_id,
         qrCode: parsedData.qr_data,
       };
-
-      console.log(retorno);
 
       return retorno;
     } catch (e) {
