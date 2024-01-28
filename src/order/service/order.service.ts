@@ -25,7 +25,7 @@ export class OrderService {
   }
 
   getByExternalId(externalId: string) {
-    return this.orderModelRepository.findOneBy({
+    return this.orderModelRepository.findOneByOrFail({
       externalId,
     });
   }

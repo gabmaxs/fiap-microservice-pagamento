@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { PaymentPartnerAdapter } from '../src/payment/adapter/mercado-pago.adapter';
-import { PAYMENT_STATUS } from '../src/payment/consts/payment-status.const';
+import { AppModule } from '../../src/app.module';
+import { PaymentPartnerAdapter } from '../../src/payment/adapter/mercado-pago.adapter';
+import { PAYMENT_STATUS } from '../../src/payment/consts/payment-status.const';
+import { Axios, AxiosResponse } from 'axios';
 
 describe('PaymentController (e2e)', () => {
   let app: INestApplication;
@@ -41,7 +42,7 @@ describe('PaymentController (e2e)', () => {
       .post('/payment')
       .send(order)
       .expect(201);
-
+    
     expect(response.body).toEqual({
       qrCode: expect.any(String),
     });
@@ -54,6 +55,10 @@ describe('PaymentController (e2e)', () => {
         status: PAYMENT_STATUS.APROVADO,
         orderExternalId: externaiId,
       }));
+    const spyOrderMS = jest.spyOn(Axios.prototype, 'post')
+      .mockImplementationOnce(async () => ({
+        status: 200,
+      } as AxiosResponse));
     const idPayment = 123;
     const payload = {
       resource: `https://api.mercadolibre.com/v1/payments/${idPayment}`,
@@ -67,5 +72,12 @@ describe('PaymentController (e2e)', () => {
 
     // expect status do pagamento atualizado
     expect(response.body.status).toBe(PAYMENT_STATUS.APROVADO);
+    expect(spyOrderMS).toHaveBeenCalledWith(
+      '/order-confirm',
+      JSON.stringify({
+        id: externaiId,
+        status: 'recebido'
+      }),
+    );
   });
 });
