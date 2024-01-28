@@ -28,6 +28,10 @@ spec:
             value: token
           - name: MERCADO_PAGO_EMPRESA_ID
             value: EMP1
+          - MERCADO_PAGO_NOTIFICATION
+            value: https://webhook.site/64403458-1ea5-469a-9427-49d1e4b5cc52
+          name: ORDER_MS_URL=
+            value: https://webhook.site/64403458-1ea5-469a-9427-49d1e4b5cc52
         livenessProbe:
           httpGet:
             path: /live
