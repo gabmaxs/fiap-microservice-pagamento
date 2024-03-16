@@ -8,6 +8,7 @@ import { PaymentPartnerAdapter } from '../adapter/mercado-pago.adapter';
 import { PAYMENT_STATUS } from '../consts/payment-status.const';
 import { CreatePaymentDTO } from '../dto/create-payment.dto';
 import { OrderMicroserviceAdapter } from '../adapter/order-microservice.adapter';
+import { KafkaService } from '../../kafka/kafka.service';
 
 @Injectable()
 export class PaymentService {
@@ -17,6 +18,7 @@ export class PaymentService {
     private orderService: OrderService,
     private paymentPartnerAdapter: PaymentPartnerAdapter,
     private paymentOrderMicroserviceAdapter: OrderMicroserviceAdapter,
+    private kafkaService: KafkaService,
   ) {}
 
   async create(createPaymentDTO: CreatePaymentDTO) {
@@ -72,10 +74,20 @@ export class PaymentService {
       const payment = await this.paymentModelRepository.findOneByOrFail({
         orderId: order.id,
       });
-      return await this.paymentModelRepository.save({
+      const retorno = await this.paymentModelRepository.save({
         ...payment,
         status,
       });
+
+      await this.kafkaService.sendMessage({
+        key: orderExternalId,
+        value: JSON.stringify({
+          id: orderExternalId,
+          status: status,
+        })
+      }, process.env.KAFKA_TOPIC_PAGAMENTO_APROVADO);
+
+      return retorno;
     } catch (e) {
       console.error(e);
       throw e;
