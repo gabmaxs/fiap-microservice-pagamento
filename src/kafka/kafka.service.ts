@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { Kafka, SASLOptions } from 'kafkajs';
+import { Kafka } from 'kafkajs';
 
 export interface KafkaMessage {
   key: string;
